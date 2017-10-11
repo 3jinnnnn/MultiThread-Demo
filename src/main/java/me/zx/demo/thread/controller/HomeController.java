@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import me.zx.demo.thread.entity.Response;
+
 /**
  *
  * @author zhangxin
@@ -27,7 +29,17 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class HomeController {
     @RequestMapping(path = "/hello", method = RequestMethod.GET)
-    public String hello() {
-        return "hello";
+    public Response hello() {
+        return new Response(true);
+    }
+
+    @RequestMapping(path = "/three-seconds", method = RequestMethod.GET)
+    public Response threeSeconds() {
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return new Response(true);
     }
 }

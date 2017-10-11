@@ -15,13 +15,36 @@
  */
 package me.zx.demo.thread.service;
 
+import java.util.concurrent.Future;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.AsyncResult;
+import org.springframework.stereotype.Service;
 
 /**
  * 同步服务.
  * @author zhangxin
  * @since 0.0.1
  */
+@Service
 public class AsyncService {
+    private static final Logger LOGGER = LoggerFactory.getLogger(AsyncService.class);
 
+    @Async("mySimpleAsync")
+    public Future<String> task1() throws InterruptedException {
+        LOGGER.info("进入task1,当前线程{}", Thread.currentThread().getName());
+        Thread.sleep(5000);
+        LOGGER.info("退出task1,当前线程{}", Thread.currentThread().getName());
+        return new AsyncResult<String>("task1 has compalted!");
+    }
+
+    @Async("myAsync")
+    public Future<String> task2() throws InterruptedException {
+        LOGGER.info("进入task2,当前线程{}", Thread.currentThread().getName());
+        Thread.sleep(5000);
+        LOGGER.info("退出task2,当前线程{}", Thread.currentThread().getName());
+        return new AsyncResult<String>("task2 has compalted!");
+    }
 }
