@@ -37,6 +37,7 @@ import org.springframework.web.client.RestTemplate;
  */
 @Configuration
 public class RestTemplateConfig {
+    private static final int TIMEOUT = 5000;
     /**
      * SimpleClientHttpRequestFactory实现方式.<br />
      * 默认:<br />
@@ -47,19 +48,21 @@ public class RestTemplateConfig {
     @Bean
     public ClientHttpRequestFactory clientHttpRequestFactory() {
         SimpleClientHttpRequestFactory requestFactory = new SimpleClientHttpRequestFactory();
-        requestFactory.setReadTimeout(5000);
-        requestFactory.setConnectTimeout(5000);
+        requestFactory.setReadTimeout(TIMEOUT);
+        requestFactory.setConnectTimeout(TIMEOUT);
         return requestFactory;
     }
 
     /**
      * RestTemplate Bean.
      * 锡膏默认的编码方式为UTF-8
-     * @return
+     * @param factory AsyncClientHttpRequestFactory
+     * @return AsyncRestOperations
      */
     @Bean
     @ConditionalOnMissingBean({ RestOperations.class, RestTemplate.class })
-    public RestOperations restOperations(final @Qualifier("clientHttpRequestFactory") ClientHttpRequestFactory factory) {
+    public RestOperations restOperations(
+            final @Qualifier("clientHttpRequestFactory") ClientHttpRequestFactory factory) {
         RestTemplate restTemplate = new RestTemplate(factory);
 
         // 使用 utf-8 编码集的 conver 替换默认的 conver（默认的 string conver 的编码集为 "ISO-8859-1"）

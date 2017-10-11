@@ -25,7 +25,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.task.AsyncListenableTaskExecutor;
 import org.springframework.core.task.SimpleAsyncTaskExecutor;
-import org.springframework.core.task.TaskExecutor;
 import org.springframework.http.client.AsyncClientHttpRequestFactory;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.http.converter.HttpMessageConverter;
@@ -40,6 +39,11 @@ import org.springframework.web.client.AsyncRestTemplate;
  */
 @Configuration
 public class AsyncRestTemplateConfig {
+    private static final int TIMEOUT = 5000;
+    /**
+     * 异步TaskExecutor.
+     * @return SimpleAsyncTaskExecutor
+     */
     @Bean
     public AsyncListenableTaskExecutor taskExecutor() {
         AsyncListenableTaskExecutor executor = new SimpleAsyncTaskExecutor("SimpleAsyncTaskExecutor-");
@@ -51,13 +55,14 @@ public class AsyncRestTemplateConfig {
      * 默认:<br />
      * ConnectTimeout: 5000(达到该值仍未连接上远程主机,则抛出异常)<br />
      * ReadTimeout: 5000(达到该值主机仍未返回结果,则抛出异常)<br />
+     * @param taskExecutor AsyncListenableTaskExecutor
      * @return ClientHttpRequestFactory
      */
     @Bean
     public AsyncClientHttpRequestFactory asyncClientHttpRequestFactory(final AsyncListenableTaskExecutor taskExecutor) {
         SimpleClientHttpRequestFactory requestFactory = new SimpleClientHttpRequestFactory();
-        requestFactory.setReadTimeout(5000);
-        requestFactory.setConnectTimeout(5000);
+        requestFactory.setReadTimeout(TIMEOUT);
+        requestFactory.setConnectTimeout(TIMEOUT);
         requestFactory.setTaskExecutor(taskExecutor);
         return requestFactory;
     }
@@ -65,7 +70,8 @@ public class AsyncRestTemplateConfig {
     /**
      * RestTemplate Bean.
      * 锡膏默认的编码方式为UTF-8
-     * @return
+     * @param factory AsyncClientHttpRequestFactory
+     * @return AsyncRestOperations
      */
     @Bean
     @ConditionalOnMissingBean({ AsyncRestOperations.class, AsyncRestTemplate.class })

@@ -35,6 +35,10 @@ import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
  */
 @Configuration
 public class FastJsonHttpMessageConfig {
+    /**
+     *
+     * @return HttpMessageConverters
+     */
     @Bean
     public HttpMessageConverters fastJsonHttpMessageConverters() {
         FastJsonHttpMessageConverter oFastConverter = new FastJsonHttpMessageConverter();

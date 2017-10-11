@@ -11,6 +11,8 @@
 2. 异步服务
     - 异步Service
     - 异步Controller
+3. AOP日志切面
+    - Controller增加切面
   
 ## 待实现功能
 1. 添加Maven插件

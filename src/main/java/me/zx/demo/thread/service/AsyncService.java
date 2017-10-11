@@ -31,19 +31,29 @@ import org.springframework.stereotype.Service;
 @Service
 public class AsyncService {
     private static final Logger LOGGER = LoggerFactory.getLogger(AsyncService.class);
-
+    private static final long SLEEP_TIME = 5000;
+    /**
+     * 同步任务mySimpleAsync.
+     * @return Future
+     * @throws InterruptedException exception
+     */
     @Async("mySimpleAsync")
     public Future<String> task1() throws InterruptedException {
         LOGGER.info("进入task1,当前线程{}", Thread.currentThread().getName());
-        Thread.sleep(5000);
+        Thread.sleep(SLEEP_TIME);
         LOGGER.info("退出task1,当前线程{}", Thread.currentThread().getName());
         return new AsyncResult<String>("task1 has compalted!");
     }
 
+    /**
+     * 同步任务myAsync.
+     * @return Future
+     * @throws InterruptedException exception
+     */
     @Async("myAsync")
     public Future<String> task2() throws InterruptedException {
         LOGGER.info("进入task2,当前线程{}", Thread.currentThread().getName());
-        Thread.sleep(5000);
+        Thread.sleep(SLEEP_TIME);
         LOGGER.info("退出task2,当前线程{}", Thread.currentThread().getName());
         return new AsyncResult<String>("task2 has compalted!");
     }

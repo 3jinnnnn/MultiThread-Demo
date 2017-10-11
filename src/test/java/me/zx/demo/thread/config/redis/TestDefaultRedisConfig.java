@@ -13,18 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package me.zx.demo.thread.controller;
+package me.zx.demo.thread.config.redis;
 
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.web.client.RestOperations;
 
-import me.zx.demo.thread.entity.Response;
+import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisPool;
 
 /**
  *
@@ -32,22 +32,21 @@ import me.zx.demo.thread.entity.Response;
  * @since 0.0.1
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringBootTest
-public class TestHomeController {
+@SpringBootTest(properties="application.properties")
+public class TestDefaultRedisConfig {
     @Autowired
-    private RestOperations restOperations;
-    //    @TestConfiguration
-    //    static class Config {
-    //        @Bean
-    //        public static RestOperations restOperations() {
-    //            return mock
-    //        }
-    //    }
+    @Qualifier("defaultJedisPool")
+    private JedisPool defaultJedisPool;
+
+    @Autowired
+    @Qualifier("extendJedisPool")
+    private JedisPool extendJedisPool;
 
     @Test
-    public void test() {
-            ResponseEntity<Response> response = restOperations.getForEntity("http://localhost:8080/hello",
-                Response.class);
-        Assert.assertTrue(response.getBody().isSuccess());
+    public void defaultTest() {
+        Jedis jedis = defaultJedisPool.getResource();
+        Assert.assertNotEquals(Long.MAX_VALUE, jedis.dbSize().longValue());
+        jedis.close();
     }
+
 }

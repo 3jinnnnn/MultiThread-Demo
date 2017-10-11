@@ -38,6 +38,10 @@ public class AsyncServiceConfig {
     /** Set the capacity for the ThreadPoolExecutor's BlockingQueue. */
     private int queueCapacity = 10;
 
+    /**
+     * 同步任务构造器.
+     * @return Executor
+     */
     @Bean
     public Executor mySimpleAsync() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
@@ -49,6 +53,10 @@ public class AsyncServiceConfig {
         return executor;
     }
 
+    /**
+     * 同步任务构造器.
+     * @return Executor
+     */
     @Bean
     public Executor myAsync() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
@@ -57,8 +65,8 @@ public class AsyncServiceConfig {
         executor.setQueueCapacity(queueCapacity);
         executor.setThreadNamePrefix("MyExecutor-");
 
-        // rejection-policy：当pool已经达到max size的时候，如何处理新任务  
-        // CALLER_RUNS：不在新线程中执行任务，而是有调用者所在的线程来执行  
+        // rejection-policy：当pool已经达到max size的时候，如何处理新任务
+        // CALLER_RUNS：不在新线程中执行任务，而是有调用者所在的线程来执行
         executor.setRejectedExecutionHandler(new ThreadPoolExecutor.CallerRunsPolicy());
         executor.initialize();
         return executor;

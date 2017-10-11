@@ -35,22 +35,35 @@ import com.alibaba.fastjson.JSON;
 @Component
 public class WebLogAspect {
     private static final Logger LOGGER = LoggerFactory.getLogger(WebLogAspect.class);
-    ThreadLocal<Long> startTime = new ThreadLocal<>();
+    private ThreadLocal<Long> startTime = new ThreadLocal<>();
 
+    /**
+     * 切面位置.
+     */
     @Pointcut("execution(public * me.zx.demo.thread.controller.*.*(..))")
     public void webLog() {
     }
 
+    /**
+     * before.
+     * @param joinPoint 切面位置
+     * @throws Throwable Throwable
+     */
     @Before("webLog()")
-    public void doBefore(JoinPoint joinPoint) throws Throwable {
+    public void doBefore(final JoinPoint joinPoint) throws Throwable {
         startTime.set(System.currentTimeMillis());
         // 省略日志记录内容
     }
 
+    /**
+     * AfterReturning.
+     * @param result 返回结果
+     * @throws Throwable Throwable
+     */
     @AfterReturning(returning = "result", pointcut = "webLog()")
-    public void doAfterReturning(Object result) throws Throwable {
+    public void doAfterReturning(final Object result) throws Throwable {
         // 处理完请求，返回内容
-        LOGGER.info("RESPONSE: " + JSON.toJSONString(result));
-        LOGGER.info("SPEND TIME : " + (System.currentTimeMillis() - startTime.get()));
+        LOGGER.info("RESPONSE: {}", JSON.toJSONString(result));
+        LOGGER.info("SPEND TIME : {}", (System.currentTimeMillis() - startTime.get()));
     }
 }

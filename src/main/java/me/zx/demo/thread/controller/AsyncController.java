@@ -42,18 +42,23 @@ public class AsyncController {
     private static final Logger LOGGER = LoggerFactory.getLogger(AsyncController.class);
     @Autowired
     @Qualifier("asyncRestOperations")
-    AsyncRestOperations asyncRestTemplate;
+    private AsyncRestOperations asyncRestTemplate;
 
     @Autowired
     private AsyncService asyncSercie;
 
+    /**
+     * 异步请求.
+     * 服务器收到请求后会马上进行返回.
+     * @return Response
+     */
     @RequestMapping(path = "/hello", method = RequestMethod.GET)
     public Response hello() {
-        String url = "http://localhost:8080/three-seconds";//休眠5秒的服务
+        String url = "http://localhost:8080/three-seconds"; //休眠5秒的服务
         ListenableFuture<ResponseEntity<Response>> future = asyncRestTemplate.getForEntity(url, Response.class);
         future.addCallback(new SuccessCallback<ResponseEntity<Response>>() {
             @Override
-            public void onSuccess(ResponseEntity<Response> arg0) {
+            public void onSuccess(final ResponseEntity<Response> arg0) {
                 try {
                     asyncSercie.task1();
                 } catch (final InterruptedException e) {
@@ -63,7 +68,7 @@ public class AsyncController {
             }
         }, new FailureCallback() {
             @Override
-            public void onFailure(Throwable arg0) {
+            public void onFailure(final Throwable arg0) {
                 try {
                     asyncSercie.task1();
                 } catch (final InterruptedException e) {

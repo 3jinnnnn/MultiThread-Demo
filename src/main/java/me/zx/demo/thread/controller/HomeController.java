@@ -15,11 +15,19 @@
  */
 package me.zx.demo.thread.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import me.zx.demo.thread.entity.Response;
+import me.zx.demo.thread.mapper.extend.RoleMapper;
+import me.zx.demo.thread.mapper.main.UserMapper;
+import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisPool;
 
 /**
  *
@@ -28,17 +36,40 @@ import me.zx.demo.thread.entity.Response;
  */
 @RestController
 public class HomeController {
+    private static final Logger LOGGER = LoggerFactory.getLogger(HomeController.class);
+    @Autowired
+    @Qualifier("defaultJedisPool")
+    private JedisPool defaultJedisPool;
+
+    @Autowired
+    private UserMapper userMapper;
+    @Autowired
+    private RoleMapper roleMapper;
+
+    /**
+     *
+     * @return Response
+     */
     @RequestMapping(path = "/hello", method = RequestMethod.GET)
     public Response hello() {
-        return new Response(true);
+        Response response = new Response(true);
+        Jedis jedis = defaultJedisPool.getResource();
+        response.setErrorCode(String.valueOf(userMapper.count() + roleMapper.count()));
+        response.setErrorMsg(jedis.dbSize().toString());
+        jedis.close();
+        return response;
     }
 
+    /**
+    *
+    * @return Response
+    */
     @RequestMapping(path = "/three-seconds", method = RequestMethod.GET)
     public Response threeSeconds() {
         try {
-            Thread.sleep(3000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+            Thread.sleep(Integer.parseInt("3000"));
+        } catch (final InterruptedException e) {
+            LOGGER.error(e.getMessage(), e);
         }
         return new Response(true);
     }

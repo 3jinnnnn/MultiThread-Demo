@@ -42,14 +42,14 @@ public class TestAsyncService {
     public void test() throws InterruptedException, ExecutionException {
         Future<String> task1 = sercie.task1();
         Future<String> task2 = sercie.task2();
-        while(true) {
-            if(task1.isDone() && task2.isDone()) {  
-                LOGGER.info("Task1 result: {}", task1.get());  
-                LOGGER.info("Task2 result: {}", task2.get());  
-                break;  
-            }  
-            Thread.sleep(1000);  
+        while (true) {
+            if (task1.isDone() && task2.isDone()) {
+                LOGGER.info("Task1 result: {}", task1.get());
+                LOGGER.info("Task2 result: {}", task2.get());
+                break;
+            }
+            Thread.sleep(1000);
         }
-        LOGGER.info("All tasks finished.");  
+        LOGGER.info("All tasks finished.");
     }
 }

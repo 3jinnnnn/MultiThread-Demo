@@ -59,7 +59,7 @@
             <appender-ref ref="ERROR" />
         </logger>
         <logger name="org.apache.ibatis.logging.jdbc" level="error" additivity="false">
-            <appender-ref ref="ERROR" />
+            <appender-ref ref="DEBUG" />
         </logger>
         <logger name="io.netty.util.internal.logging.Slf4JLogger" level="info" additivity="false">
             <appender-ref ref="ERROR" />

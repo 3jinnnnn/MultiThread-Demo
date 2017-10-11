@@ -34,6 +34,10 @@ public class Response {
     private String errorCode;
     private String errorMsg;
 
+    /**
+     * 构造器.
+     * @param success boolean
+     */
     public Response(final boolean success) {
         this.success = success;
     }

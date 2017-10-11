@@ -13,29 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package me.zx.demo.thread;
+package me.zx.demo.thread.mapper.extend;
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Select;
 
 /**
- * main.
  *
  * @author zhangxin
  * @since 0.0.1
  */
-@SpringBootApplication
-public class ThreadApplication {
+@Mapper
+public interface RoleMapper {
     /**
+     * 统计数量.
+     * @return 数量
      */
-    protected ThreadApplication() {
-    }
-
-    /**
-     * main.
-     * @param args args
-     */
-    public static void main(final String[] args) {
-        SpringApplication.run(ThreadApplication.class, args);
-    }
+    @Select("select count(1) from t_role")
+    long count();
 }
